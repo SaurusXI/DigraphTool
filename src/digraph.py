@@ -51,7 +51,7 @@ class Digraph:
             return
 
         selected_node = self.node_map[self.selected_Id]
-        selected_node.insert_Rnode(self.node_count)
+        selected_node.insert_rnode(self.node_count)
         self.node_count += 1
 
     def insert_text(self, text):
