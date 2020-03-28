@@ -5,7 +5,8 @@ import QtQuick.Layouts 1.3
 import QtQuick.Shapes 1.12
 import QtGraphicalEffects 1.0
 
-import "Global"
+import "res"
+import "scripts/node.js" as NodeScript
 
 ApplicationWindow {
     id: window
@@ -88,8 +89,8 @@ ApplicationWindow {
                     width: 2 * parent.radius
                 }
                 onClicked: {
+                    NodeScript.createNode("Sample", 100, 100)
                     console.log("You are closing this window.");
-                    backendWindow.onClose();
                 }
             }
 
