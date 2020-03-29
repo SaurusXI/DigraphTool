@@ -2,7 +2,7 @@ import QtQuick 2.11
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
-import QtQuick.Shapes 1.12
+import QtQuick.Shapes 1.14
 import QtGraphicalEffects 1.0
 
 import "res"
@@ -16,7 +16,6 @@ ApplicationWindow {
 
     minimumWidth: 960
     minimumHeight: 720
-
 
     title: "DigraphTool"
     flags: Qt.Window | Qt.FramelessWindowHint
@@ -247,6 +246,9 @@ ApplicationWindow {
                     height: graphLayerFlickable.flickHeight
                     width: graphLayerFlickable.flickWidth
                     color: "#ddddf7"
+
+                    property var prevNode: null
+                    property bool shouldConnect: false
                 }
             }
         }

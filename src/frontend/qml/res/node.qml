@@ -2,10 +2,10 @@ import QtQuick 2.11
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
-import QtQuick.Shapes 1.12
+import QtQuick.Shapes 1.14
 import QtGraphicalEffects 1.0
 
-import "../res"
+import "../scripts/line.js" as LineScript
 
 RoundButton {
     id: nodeButton
@@ -51,16 +51,12 @@ RoundButton {
             parentFlickable.interactive = false
         }
 
+        onClicked: {
+
+        }
+
         onReleased: {
             backgroundRectangle.color = "#f569d9"
-
-            if (parentFlickable.flickWidth < nodeButton.x + nodeButton.width) {
-                parentFlickable.flickWidth = nodeButton.x + nodeButton.width + 200
-            }
-            if (parentFlickable.flickHeight < nodeButton.y + nodeButton.height) {
-                parentFlickable.flickHeight = nodeButton.y + nodeButton.height + 200
-            }
-
             parentFlickable.interactive = true
         }
 
@@ -122,6 +118,10 @@ RoundButton {
                 height: parent.height
                 color: parent.color
             }
+        }
+
+        onClicked: {
+
         }
         radius: parent.radius
     }
