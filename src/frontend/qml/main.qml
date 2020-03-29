@@ -11,28 +11,29 @@ import "scripts/node.js" as NodeScript
 ApplicationWindow {
     id: window
     visible: true
-    width: 640
-    height: 480
+    width: 960
+    height: 720
 
-    minimumHeight: 480
-    minimumWidth: 640
+    minimumWidth: 960
+    minimumHeight: 720
+
 
     title: "DigraphTool"
     flags: Qt.Window | Qt.FramelessWindowHint
 
-    color: Resources.windowBackgroundColor
+    color: "transparent"
 
     property var isFullScreen: false
-    property var prevHeight: 480
-    property var prevWidth: 640
+    property var prevHeight: minimumHeight
+    property var prevWidth: minimumWidth
     property var prevWindowX: 0
     property var prevWindowY: 0
 
 
     Rectangle {
         id: windowLayer
-        height: parent.height
-        width: parent.width
+        height: parent.height - Resources.windowDropShadowVerticalPadding
+        width: parent.width - Resources.windowDropShadowVerticalPadding
         radius: Resources.windowCornerRadius
         color: Resources.windowBackgroundColor
 
@@ -42,6 +43,7 @@ ApplicationWindow {
             width: parent.width
             height: Resources.windowTitleBarHeight
             color: Resources.windowTitleBarBackgroundColor
+            radius: Resources.windowCornerRadius
 
             Text {
                 id: windowTitleBarText
@@ -50,6 +52,17 @@ ApplicationWindow {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: Resources.windowTitleBarForegroundColor
+            }
+
+            Rectangle {
+                id: windowTitleBarCornerRadiusOffset
+                //offset to hide corner radius at bottom of titlebar.
+                width: parent.width
+                height: parent.radius
+                color: parent.color
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
 
 
@@ -89,7 +102,6 @@ ApplicationWindow {
                     width: 2 * parent.radius
                 }
                 onClicked: {
-                    NodeScript.createNode("Sample", 100, 100)
                     console.log("You are closing this window.");
                 }
             }
@@ -150,12 +162,100 @@ ApplicationWindow {
 
         }
 
-    
+        Rectangle {
+            id: commandLayer
+            anchors.top: windowTitleBar.bottom
+            height: parent.height - windowTitleBar.height - parent.radius
+            width: 180
+            color: "transparent"
+
+            RoundButton {
+                id: createNewNodeButton
+                anchors.horizontalCenter: parent.horizontalCenter
+                y: 90
+                height: 40
+                width: parent.width - 20
+                radius: 10
+                hoverEnabled: true
+                text: "Create New Node"
+                background: Rectangle {
+                    id: backgroundRectangle
+                    anchors.fill: parent
+                    color: Resources.childElementBackgroundColor
+                    radius: parent.radius
+                }
+
+                contentItem: Text {
+                    text: parent.text
+                    font: parent.font
+                    opacity: enabled ? 1.0 : 0.3
+                    color: Resources.childElementForegroundColor
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                }
+
+                onPressed: {
+                    backgroundRectangle.color = Resources.childElementClickColor
+                }
+
+                onReleased: {
+                    backgroundRectangle.color = Resources.childElementFocusColor
+                }
+
+                onHoveredChanged: {
+                    if (hovered) {
+                        backgroundRectangle.color = Resources.childElementFocusColor
+                    } else {
+                        backgroundRectangle.color = Resources.childElementBackgroundColor
+                    }
+                }
+
+                onClicked: {
+                    NodeScript.createNode(graphLayer, 50, 50, new NodeScript.Node(10, "Sample"))
+                }
+            }
+        }
+
+
+        ScrollView {
+            id: graphLayerScrollView
+            clip: true
+            anchors.left: commandLayer.right
+            anchors.top: windowTitleBar.bottom
+            height: windowLayer.height - windowTitleBar.height - windowLayer.radius
+            width: 2 * windowLayer.width / 3 //66% of windowLayer is given to graphLayer's ScrollView
+
+            ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOn
+
+            Flickable {
+                id: graphLayerFlickable
+
+                property real flickHeight: 50000
+                property real flickWidth: 5000
+
+                width: flickWidth
+                height: flickHeight
+
+                contentHeight: flickHeight
+                contentWidth: flickWidth
+                boundsBehavior: Flickable.StopAtBounds
+
+                Rectangle {
+                    id: graphLayer
+                    height: graphLayerFlickable.flickHeight
+                    width: graphLayerFlickable.flickWidth
+                    color: "#ddddf7"
+                }
+            }
+        }
+
     }
 
     DropShadow {
         id: windowLayerDropShadow
-        anchors.fill: window
+        anchors.fill: windowLayer
         cached: true
         verticalOffset: 1
         horizontalOffset: 1

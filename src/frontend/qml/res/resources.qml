@@ -23,4 +23,8 @@ QtObject {
     property var windowTitleBarFontPointSize: 10
     property var windowTitleBarBottomOffset: 20
 
+    property var childElementBackgroundColor: "#708ae9"
+    property var childElementForegroundColor: "#f1f3ff"
+    property var childElementFocusColor: "#607ad9"
+    property var childElementClickColor: "#506ac9"
 }
